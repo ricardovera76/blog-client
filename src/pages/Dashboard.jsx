@@ -27,7 +27,7 @@ const Dashboard = () => {
           new Date(Date.now()).getMinutes(),
       };
       console.log(messageData);
-      // setChatMessages(...chatMessages, messageData);
+      setChatMessages((list) => [...list, messageData]);
 
       await socket.emit("send_message", messageData);
     }
@@ -36,7 +36,7 @@ const Dashboard = () => {
   React.useEffect(() => {
     socket.on("received_message", (data) => {
       console.log(data);
-      // setChatMessages(...chatMessages, data)
+      setChatMessages((list) => [...list, data]);
     });
   }, [socket]);
 
@@ -64,7 +64,12 @@ const Dashboard = () => {
           <button onClick={sendMessageHandler}>send Message</button>
           <div>
             {chatMessages.map((messages) => {
-              return <h3>a</h3>;
+              return (
+                <>
+                  <h3>{messages.message}</h3>
+                  <p>{messages.author}</p>
+                </>
+              );
             })}
           </div>
         </div>
