@@ -36,7 +36,7 @@ const Dashboard = () => {
   React.useEffect(() => {
     socket.on("received_message", (data) => {
       console.log(data);
-      // setChatMessages(...chatMessages, data);
+      // setChatMessages(...chatMessages, data)
     });
   }, [socket]);
 
