@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   const joinRoomHandler = () => {
     if (userName !== "" && room !== "") {
-      socket.emit("join_room", room);
+      socket.emit("join", room);
     }
   };
 
@@ -29,16 +29,16 @@ const Dashboard = () => {
       console.log(messageData);
       setChatMessages((list) => [...list, messageData]);
 
-      await socket.emit("send_message", messageData);
+      await socket.emit("send", messageData);
     }
   };
 
   React.useEffect(() => {
-    socket.on("received_message", (data) => {
+    socket.on("received", (data) => {
       console.log(data);
       setChatMessages((list) => [...list, data]);
     });
-  }, [socket]);
+  }, []);
 
   return (
     <div>
