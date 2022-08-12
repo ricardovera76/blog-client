@@ -11,6 +11,7 @@ const Dashboard = () => {
 
   const joinRoomHandler = () => {
     if (userName !== "" && room !== "") {
+      setChatMessages([]);
       socket.emit("join", room);
     }
   };
