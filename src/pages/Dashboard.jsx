@@ -1,81 +1,65 @@
-import React from "react";
-import io from "socket.io-client";
-
-const socket = io.connect("http://localhost:5000");
+import { useEffect, useState } from "react";
+import {
+  CardContainer,
+  CarouselContainer,
+  Chats,
+  ChatsContainer,
+  Container,
+  Main,
+  ChatsGrid,
+} from "../styles/Dashboard";
+import Carousel from "react-grid-carousel";
+import { getDashboardPosts } from "../helpers/postsGetter";
 
 const Dashboard = () => {
-  const [userName, setUserName] = React.useState("");
-  const [room, setRoom] = React.useState("");
-  const [currentMessage, setCurrentMessage] = React.useState("");
-  const [chatMessages, setChatMessages] = React.useState([]);
-
-  const joinRoomHandler = () => {
-    if (userName !== "" && room !== "") {
-      setChatMessages([]);
-      socket.emit("join", room);
-    }
-  };
-
-  const sendMessageHandler = async () => {
-    if (currentMessage !== "") {
-      const messageData = {
-        room: room,
-        author: userName,
-        message: currentMessage,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
-      };
-      console.log(messageData);
-      setChatMessages((list) => [...list, messageData]);
-
-      await socket.emit("send", messageData);
-    }
-  };
-
-  React.useEffect(() => {
-    socket.on("received", (data) => {
-      console.log(data);
-      setChatMessages((list) => [...list, data]);
-    });
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const getter = async () => {
+      const data = await getDashboardPosts();
+      setPosts(data);
+    };
+    getter();
   }, []);
 
+  const chats = [
+    { name: "Fisica", since: "2022" },
+    { name: "Quimica", since: "2022" },
+    { name: "Matematica", since: "2022" },
+    { name: "Biologia", since: "2022" },
+  ];
+
   return (
-    <div>
-      <h3>Join a chat</h3>
-      <input
-        type="text"
-        placeholder="user name"
-        onChange={(e) => setUserName(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="chat room"
-        onChange={(e) => setRoom(e.target.value)}
-      />
-      <button onClick={joinRoomHandler}>Join a room</button>
+    <Container>
+      <Main>
+        <h2>Ultimos Foros</h2>
+        <CarouselContainer>
+          <Carousel cols={2} loop scrollSnap containerStyle={{ width: "100%" }}>
+            {posts.map((post) => (
+              <Carousel.Item key={post.post_id}>
+                <CardContainer>
+                  <h4>{post?.post_title}</h4>
+                  <p>{post?.post_body}</p>
+                  <p>{post?.post_user_id}</p>
+                </CardContainer>
+              </Carousel.Item>
+            ))}
+          </Carousel>
+        </CarouselContainer>
+      </Main>
       <div>
-        <div>
-          <input
-            type="text"
-            placeholder="send message"
-            onChange={(e) => setCurrentMessage(e.target.value)}
-          />
-          <button onClick={sendMessageHandler}>send Message</button>
-          <div>
-            {chatMessages.map((messages) => {
-              return (
-                <>
-                  <h3>{messages.message}</h3>
-                  <p>{messages.author}</p>
-                </>
-              );
-            })}
-          </div>
-        </div>
+        <ChatsContainer>
+          <h2>Mis Ultimos Chats</h2>
+          <ChatsGrid>
+            {chats.map((chat) => (
+              <Chats key={chat.name + chat.since}>
+                <h4>{chat.name}</h4>
+                <p>{chat.since}</p>
+              </Chats>
+            ))}
+          </ChatsGrid>
+        </ChatsContainer>
       </div>
-    </div>
+    </Container>
   );
 };
 
