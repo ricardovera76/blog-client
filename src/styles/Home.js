@@ -2,18 +2,24 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 
 export const Container = styled.nav`
-  background-color: #eff0f3;
   width: 100vw;
   height: 100%;
   display: flex;
+  margin-bottom: 5vh;
 `;
 
 export const Navigation = styled.ul`
+  background-color: #eff0f3;
+  position: fixed;
+  top: 0;
+  margin: 0;
+  height: 5vh;
+  width: 100%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   padding: 5px;
-  width: min(80%, 500px);
+  z-index: 100;
 `;
 
 export const Items = styled(NavLink)`

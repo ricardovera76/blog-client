@@ -9,17 +9,18 @@ import {
   ChatsGrid,
 } from "../styles/Dashboard";
 import Carousel from "react-grid-carousel";
-import { getDashboardPosts } from "../helpers/postsGetter";
+import { usePosts } from "../hooks/usePosts";
 
 const Dashboard = () => {
   const [posts, setPosts] = useState([]);
+  const { getDashboardPosts } = usePosts("http://localhost:5000");
   useEffect(() => {
     const getter = async () => {
       const data = await getDashboardPosts();
-      setPosts(data);
+      setPosts(data || []);
     };
     getter();
-  }, []);
+  }, [getDashboardPosts]);
 
   const chats = [
     { name: "Fisica", since: "2022" },

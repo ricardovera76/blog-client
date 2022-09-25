@@ -1,16 +1,20 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Chats from "./pages/Chats";
-import Posts from "./pages/Posts";
-import Home from "./pages/Home";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import Dashboard from "./pages/Dashboard";
-import Conference from "./pages/Conference";
+import Chats from "./components/Chats";
+import Posts from "./components/Posts";
+import Home from "./components/Home";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import Dashboard from "./components/Dashboard";
+import Conference from "./components/Conference";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" exact element={<Navigate to="/home" replace={true} />} />
+      <Route
+        path="/"
+        exact
+        element={<Navigate to="/home/dashboard" replace={true} />}
+      />
       <Route path="/home" exact element={<Home />}>
         <Route path="chats" exact element={<Chats />} />
         <Route path="posts" exact element={<Posts />} />
