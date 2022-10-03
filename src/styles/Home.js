@@ -1,40 +1,48 @@
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export const Container = styled.nav`
   width: 100vw;
   height: 100%;
   display: flex;
-  margin-bottom: 5vh;
+  /* margin: 0 0 0 15vh; */
 `;
 
-export const Navigation = styled.ul`
+export const Navigation = styled(motion.ul)`
   background-color: #eff0f3;
   position: fixed;
   top: 0;
+  left: 0;
   margin: 0;
-  height: 5vh;
-  width: 100%;
+  height: 100vh;
+  min-width: 3%;
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   padding: 5px;
   z-index: 100;
+  box-shadow: var(--shadow);
 `;
 
 export const Items = styled(NavLink)`
   list-style: none;
   text-decoration: none;
   color: black;
-  background-color: transparent;
+  background-color: #fff;
   display: flex;
-  justify-content: center;
+  justify-content: ${(props) =>
+    props.isopen === "true" ? "space-between" : "center"};
   align-items: center;
   border-radius: 10px;
-  width: 35px;
+  width: ${(props) => (props.isopen === "true" ? "80%" : "6%")};
+  height: 3%;
+  padding: 5px 15px;
   transition: all 0.2s ease-in-out;
   border: none;
   outline: 0;
+  margin: 10px 0;
 
   &:hover {
     background-color: #6246ea;
@@ -55,4 +63,20 @@ export const Items = styled(NavLink)`
 
 export const ItemName = styled.li`
   list-style: none;
+  margin: 20px 0;
+  text-decoration: none;
+  color: black;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  width: 35px;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  outline: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
