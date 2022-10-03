@@ -12,7 +12,7 @@ import {
   ChatMessage,
   ChatMessageInfo,
   Container,
-  DedicatedFiles,
+  // DedicatedFiles,
   Dropdown,
   DropdownButton,
   DropdownMenu,
@@ -51,7 +51,6 @@ const Chats = () => {
           ":" +
           new Date(Date.now()).getMinutes(),
       };
-      console.log(messageData);
       setChatMessages((list) => [...list, messageData]);
 
       await socket.emit("send", messageData);
@@ -60,14 +59,13 @@ const Chats = () => {
 
   React.useEffect(() => {
     socket.on("received", (data) => {
-      console.log(data);
       setChatMessages((list) => [...list, data]);
     });
     if (userID !== "" && room !== "") {
       setChatMessages([]);
       socket.emit("join", room);
     }
-  }, []);
+  }, [room, userID]);
 
   const toggleDropdownMenu = () => {
     showDropdown(!dropdown);
@@ -80,7 +78,10 @@ const Chats = () => {
         <ChatMain>
           {chatMessages.map((messages) => {
             return (
-              <ChatMessage type={messages.user_id === userID ? "me" : "other"}>
+              <ChatMessage
+                key={messages.user_id + messages.time}
+                type={messages.user_id === userID ? "me" : "other"}
+              >
                 <h4>{messages.message}</h4>
                 <ChatMessageInfo>
                   <p>{messages.user_id}</p>
