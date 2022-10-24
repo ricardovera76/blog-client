@@ -8,6 +8,7 @@ import {
   Cancel,
   Menu,
   Send,
+  Add,
 } from "@mui/icons-material";
 
 export const logo = (type) => {
@@ -21,6 +22,7 @@ export const logo = (type) => {
     close: <Cancel />,
     menu: <Menu />,
     send: <Send />,
+    add: <Add />,
   };
 
   return icon[type] || icon.home;

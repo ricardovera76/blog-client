@@ -2,14 +2,19 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 
 export const Container = styled.div`
-  margin-top: 6vh;
-  z-index: 1000;
+  /* background-color: red; */
+  margin-left: 5vw;
   padding: 15px;
   display: grid;
   justify-items: center;
   align-content: flex-start;
-  width: calc(100vw - 2 * 15px);
-  height: calc(94vh - 2 * 15px);
+  width: calc(95vw - 2 * 30px);
+  height: calc(95vh - 2 * 30px);
+
+  @media (max-width: 360px) {
+    margin-bottom: 15vh;
+    height: calc(80vh - 2 * 30px);
+  }
 `;
 
 export const ControlPanel = styled.section`
@@ -19,22 +24,31 @@ export const ControlPanel = styled.section`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  width: min(calc(80% - 2 * 15px), 500px);
-  margin-bottom: 15px;
+  width: min(calc(50% - 2 * 15px), 500px);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+
+  @media (max-width: 500px) {
+    width: min(calc(80% - 2 * 15px), 500px);
+  }
 `;
 
 export const Panel = styled.ul`
   display: flex;
+  height: 90%;
   width: 90%;
-  padding: 10px;
-  justify-content: space-between;
+  padding: 0;
+  align-items: center;
+  justify-content: space-around;
 `;
 
 export const Controls = styled.li`
   background-color: #fffffe;
   padding: 10px;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 10px;
   list-style: none;
   transition: all 0.5s;
@@ -48,16 +62,20 @@ export const Controls = styled.li`
 
 export const PostsContainer = styled.section`
   width: 90%;
-  height: 90%;
+  height: 100%;
   overflow-y: scroll;
   display: grid;
   gap: 50px;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   justify-content: center;
-  padding: 15px;
+  padding: 40px;
 
   @media (max-width: 800px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (max-width: 470px) {
     grid-template-columns: 1fr 1fr;
+    gap: 30px;
   }
 `;
 
@@ -65,17 +83,27 @@ export const PostCard = styled.div`
   background-color: #eee;
   border-radius: 15px;
   padding: 10px;
-  height: 25vh;
+  max-height: 10vh;
+  min-height: 3vh;
+  width: calc(100%);
+  overflow: hidden;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+
+  @media (max-width: 800px) {
+    font-size: 0.8rem;
+  }
 `;
 
-export const NewPostModal = styled(motion.div)`
+export const Backdrop = styled(motion.div)`
   position: absolute;
   top: 0;
+  left: 0;
   width: 100vw;
+  padding: 0;
+  margin: 0;
   height: 100vh;
-  z-index: 100;
+  z-index: 1000000;
   backdrop-filter: blur(15px);
   display: flex;
   flex-direction: column;
@@ -111,12 +139,51 @@ export const Modal = styled.div`
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 `;
 
+export const ModalFull = styled.div`
+  background-color: #fff;
+  width: 90%;
+  height: 90%;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+`;
+
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 10%;
+`;
+
+export const ModalBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 90%;
+  overflow-y: scroll;
+`;
+
+export const ModalBodyText = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  overflow-wrap: break-word;
+`;
+
+export const ModalBodyAtt = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
 export const FormPost = styled.form`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   width: 85%;
-  height: 95%;
+  height: 90%;
   padding: 25px;
 `;
 
@@ -130,9 +197,11 @@ export const FormExit = styled.div`
 
 export const FormInput = styled.input`
   border-radius: 10px;
+  margin: 10px;
   border: 2px solid #6246ea;
   padding: 15px;
   transition: all 0.5s;
+  width: 90%;
 
   &:hover,
   &:focus {
@@ -143,10 +212,11 @@ export const FormInput = styled.input`
 `;
 
 export const FormText = styled.textarea`
+  margin: 10px;
   max-height: 25vh;
-  height: 15vh;
-  max-width: 94%;
-  width: 94%;
+  height: 10vh;
+  max-width: 90%;
+  width: 90%;
   border-radius: 10px;
   border: 2px solid #6246ea;
   padding: 15px;
@@ -162,8 +232,10 @@ export const FormText = styled.textarea`
 
 export const FormFile = styled.label`
   border-radius: 10px;
+  margin: 10px;
   border: 2px solid #6246ea;
   display: inline-block;
+  width: 90%;
   padding: 6px 12px;
   cursor: pointer;
   & input[type="file"] {
@@ -172,6 +244,8 @@ export const FormFile = styled.label`
 `;
 
 export const Button = styled.button`
+  margin: 10px;
+  width: 100%;
   padding: 10px;
   background-color: #eee;
   border-radius: 10px;

@@ -2,33 +2,22 @@ import React from "react";
 import io from "socket.io-client";
 import { logo } from "../assets/icons";
 import { AnimatePresence } from "framer-motion";
-import {
-  Chat,
-  ChatHead,
-  ChatInput,
-  ChatInputSend,
-  ChatInputText,
-  ChatMain,
-  ChatMessage,
-  ChatMessageInfo,
-  Container,
-  // DedicatedFiles,
-  Dropdown,
-  DropdownButton,
-  DropdownMenu,
-  DropdownMenuItems,
-  Panel,
-} from "../styles/Chats";
+import { useWindowSize } from "../hooks/useWindowSize";
+import * as Styles from "../styles/Chats";
 
 const socket = io.connect("http://localhost:5000");
 
 const Chats = () => {
-  // const [userID, setUserID] = React.useState("");
-  const [room, setRoom] = React.useState("FISICA2021aaaa");
-  const [currentMessage, setCurrentMessage] = React.useState("");
+  const [room, setRoom] = React.useState();
+  // const [room, setRoom] = React.useState("FISICA2021aaaa");
   const [chatMessages, setChatMessages] = React.useState([]);
   const [dropdown, showDropdown] = React.useState(false);
-  const chats = ["FISICA2021aaaa", "FISICA2021bbbb"];
+  const [showModal, setShowModal] = React.useState(false);
+  const windowSize = useWindowSize();
+  const bottomRef = React.useRef(null);
+  const inputMsg = React.useRef(null);
+  // const chats = ["FISICA2021aaaa", "FISICA2021bbbb"];
+  const chats = [];
 
   const userID = localStorage.getItem("user_id");
 
@@ -40,17 +29,23 @@ const Chats = () => {
     }
   };
 
+  React.useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
+
   const sendMessageHandler = async () => {
-    if (currentMessage !== "") {
+    const msg = inputMsg.current.value;
+    if (msg !== "") {
       const messageData = {
         chat_name: room,
         user_id: userID,
-        message: currentMessage,
+        message: msg,
         time:
           new Date(Date.now()).getHours() +
           ":" +
           new Date(Date.now()).getMinutes(),
       };
+      inputMsg.current.value = "";
       setChatMessages((list) => [...list, messageData]);
 
       await socket.emit("send", messageData);
@@ -72,40 +67,15 @@ const Chats = () => {
   };
 
   return (
-    <Container>
-      <Chat>
-        <ChatHead>{room}</ChatHead>
-        <ChatMain>
-          {chatMessages.map((messages) => {
-            return (
-              <ChatMessage
-                key={messages.user_id + messages.time}
-                type={messages.user_id === userID ? "me" : "other"}
-              >
-                <h4>{messages.message}</h4>
-                <ChatMessageInfo>
-                  <p>{messages.user_id}</p>
-                  <p>{messages.time}</p>
-                </ChatMessageInfo>
-              </ChatMessage>
-            );
-          })}
-        </ChatMain>
-        <ChatInput>
-          <ChatInputText
-            placeholder="send message"
-            onChange={(e) => setCurrentMessage(e.target.value)}
-          />
-          <ChatInputSend onClick={sendMessageHandler}>
-            {logo("send")}
-          </ChatInputSend>
-        </ChatInput>
-      </Chat>
-      <Panel>
-        <Dropdown onClick={toggleDropdownMenu}>
-          <DropdownButton>Seleccionar Chat</DropdownButton>
+    <Styles.Container w={windowSize.width}>
+      <Styles.Panel w={windowSize.width}>
+        <Styles.Dropdown w={windowSize.width} onClick={toggleDropdownMenu}>
+          <Styles.DropdownButton w={windowSize.width}>
+            Selecciona Un Chat
+          </Styles.DropdownButton>
           <AnimatePresence>
-            <DropdownMenu
+            <Styles.DropdownMenu
+              w={windowSize.width}
               initial={`${dropdown}`}
               animate={`${dropdown}`}
               variants={{
@@ -120,7 +90,8 @@ const Chats = () => {
             >
               {dropdown &&
                 chats.map((chat) => (
-                  <DropdownMenuItems
+                  <Styles.DropdownMenuItems
+                    w={windowSize.width}
                     key={chat}
                     onClick={() => {
                       setRoom(chat);
@@ -129,14 +100,64 @@ const Chats = () => {
                     }}
                   >
                     {chat}
-                  </DropdownMenuItems>
+                  </Styles.DropdownMenuItems>
                 ))}
-            </DropdownMenu>
+            </Styles.DropdownMenu>
           </AnimatePresence>
-        </Dropdown>
-        {/* <DedicatedFiles>Enviar archivos dedicados</DedicatedFiles> */}
-      </Panel>
-    </Container>
+        </Styles.Dropdown>
+        {windowSize.width <= 600 && (
+          <Styles.FilesButton onClick={() => setShowModal(!showModal)}>
+            Mostar Archivos
+          </Styles.FilesButton>
+        )}
+        <AnimatePresence>
+          {showModal && (
+            <Styles.FilesBackdrop
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Styles.FilesModal>
+                <Styles.ModalHeader>
+                  <Styles.ExitModal onClick={() => setShowModal(!showModal)}>
+                    {logo("close")}
+                  </Styles.ExitModal>
+                </Styles.ModalHeader>
+                <div>
+                  <p>Content</p>
+                </div>
+              </Styles.FilesModal>
+            </Styles.FilesBackdrop>
+          )}
+        </AnimatePresence>
+        {/* <Files>Enviar archivos dedicados</Files> */}
+      </Styles.Panel>
+      <Styles.Chat w={windowSize.width}>
+        <Styles.ChatHead>{room}</Styles.ChatHead>
+        <Styles.ChatMain>
+          {chatMessages.map((messages) => {
+            return (
+              <Styles.ChatMessage
+                key={messages.user_id + messages.time}
+                type={messages.user_id === userID ? "me" : "other"}
+                data-time={`${
+                  messages.user_id === userID ? "" : messages.user_id
+                } ${messages.time}`}
+              >
+                <h4>{messages.message}</h4>
+              </Styles.ChatMessage>
+            );
+          })}
+          <div ref={bottomRef} />
+        </Styles.ChatMain>
+        <Styles.ChatInput>
+          <Styles.ChatInputText placeholder="send message" ref={inputMsg} />
+          <Styles.ChatInputSend onClick={sendMessageHandler}>
+            {logo("send")}
+          </Styles.ChatInputSend>
+        </Styles.ChatInput>
+      </Styles.Chat>
+    </Styles.Container>
   );
 };
 

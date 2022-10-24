@@ -2,10 +2,9 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Chats from "./components/Chats";
 import Posts from "./components/Posts";
 import Home from "./components/Home";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
 import Dashboard from "./components/Dashboard";
 import Conference from "./components/Conference";
+import Auth from "./components/Auth";
 
 const App = () => {
   return (
@@ -21,8 +20,12 @@ const App = () => {
         <Route path="dashboard" exact element={<Dashboard />} />
         <Route path="conference" exact element={<Conference />} />
       </Route>
-      <Route path="/signin" exact element={<SignIn />} />
-      <Route path="/signup" exact element={<SignUp />} />
+      <Route path="/auth" exact element={<Auth />} />
+      <Route
+        path="*"
+        element={<Navigate to="/home/dashboard" />}
+        replace={true}
+      />
     </Routes>
   );
 };

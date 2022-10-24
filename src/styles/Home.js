@@ -6,7 +6,6 @@ export const Container = styled.nav`
   width: 100vw;
   height: 100%;
   display: flex;
-  /* margin: 0 0 0 15vh; */
 `;
 
 export const Navigation = styled(motion.ul)`
@@ -16,10 +15,27 @@ export const Navigation = styled(motion.ul)`
   left: 0;
   margin: 0;
   height: 100vh;
-  min-width: 3%;
+  min-width: 7%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  align-items: center;
+  padding: 5px;
+  z-index: 100;
+  box-shadow: var(--shadow);
+`;
+
+export const PocketNavigation = styled.ul`
+  background-color: #eff0f3;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  width: 100vw;
+  /* min-height: 3%; */
+  height: 5%;
+  display: flex;
+  justify-content: space-evenly;
   align-items: center;
   padding: 5px;
   z-index: 100;
@@ -58,6 +74,11 @@ export const Items = styled(NavLink)`
     background-color: #46c4ea;
     box-shadow: var(--shadow);
     cursor: pointer;
+  }
+
+  @media (max-width: 1020px) {
+    width: 2%;
+    height: 50%;
   }
 `;
 

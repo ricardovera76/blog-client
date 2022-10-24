@@ -52,12 +52,20 @@ export const ChatsGrid = styled.ul`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 95%;
+  align-items: center;
+  width: 100%;
+
+  @media (max-width: 550px) {
+    justify-content: flex-start;
+  }
 `;
 
 export const Chats = styled.li`
-  width: 35%;
+  width: 40%;
+  background-color: red;
   margin: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   list-style: none;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
@@ -75,5 +83,8 @@ export const Chats = styled.li`
     background-color: #6246ea;
     color: white;
     cursor: pointer;
+  }
+  @media (max-width: 550px) {
+    width: 80%;
   }
 `;
