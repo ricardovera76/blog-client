@@ -19,7 +19,7 @@ const Chats = () => {
   // const chats = ["FISICA2021aaaa", "FISICA2021bbbb"];
   const chats = [];
 
-  const userID = localStorage.getItem("user_id");
+  const userID = JSON.parse(localStorage.getItem("userSigned")).user_id;
 
   const joinRoomHandler = () => {
     console.log("joined", room, userID);

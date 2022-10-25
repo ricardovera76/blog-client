@@ -85,7 +85,7 @@ export const PostCard = styled.div`
   padding: 10px;
   max-height: 10vh;
   min-height: 3vh;
-  width: calc(100%);
+  width: calc(100% - 2 * 10px);
   overflow: hidden;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
@@ -137,6 +137,11 @@ export const Modal = styled.div`
   justify-content: flex-start;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+
+  @media (max-width: 560px) {
+    width: 80%;
+    height: 90%;
+  }
 `;
 
 export const ModalFull = styled.div`
@@ -182,9 +187,10 @@ export const ModalBodyAtt = styled.div`
 export const FormPost = styled.form`
   display: flex;
   flex-direction: column;
-  width: 85%;
-  height: 90%;
+  width: 100%;
+  height: 80%;
   padding: 25px;
+  margin: 0;
 `;
 
 export const FormExit = styled.div`
@@ -197,11 +203,11 @@ export const FormExit = styled.div`
 
 export const FormInput = styled.input`
   border-radius: 10px;
-  margin: 10px;
+  margin: 10px 0;
   border: 2px solid #6246ea;
-  padding: 15px;
+  padding: 15px 0;
   transition: all 0.5s;
-  width: 90%;
+  width: 100%;
 
   &:hover,
   &:focus {
@@ -212,14 +218,14 @@ export const FormInput = styled.input`
 `;
 
 export const FormText = styled.textarea`
-  margin: 10px;
+  margin: 10px 0;
   max-height: 25vh;
-  height: 10vh;
-  max-width: 90%;
-  width: 90%;
+  height: 9vh;
+  max-width: 100%;
+  width: 100%;
   border-radius: 10px;
   border: 2px solid #6246ea;
-  padding: 15px;
+  padding: 15px 0;
   transition: all 0.5s;
 
   &:hover,
@@ -232,11 +238,11 @@ export const FormText = styled.textarea`
 
 export const FormFile = styled.label`
   border-radius: 10px;
-  margin: 10px;
+  margin: 10px 0;
   border: 2px solid #6246ea;
   display: inline-block;
-  width: 90%;
-  padding: 6px 12px;
+  width: 100%;
+  padding: 6px 0;
   cursor: pointer;
   & input[type="file"] {
     display: none;
@@ -244,9 +250,9 @@ export const FormFile = styled.label`
 `;
 
 export const Button = styled.button`
-  margin: 10px;
+  margin: 10px 0;
   width: 100%;
-  padding: 10px;
+  padding: 10px 0;
   background-color: #eee;
   border-radius: 10px;
   border: none;

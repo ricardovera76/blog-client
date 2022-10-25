@@ -10,13 +10,13 @@ export const usePosts = (endpoint) => {
     return [];
   };
 
-  const createAPost = async (title, body, userId) => {
-    const data = await ax.post(`${endpoint}/posts/new`, {
-      post_body: body,
-      post_title: title,
-      post_user_id: userId,
+  const createAPost = async (data) => {
+    const res = await ax.post(`${endpoint}/posts/new`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-    return data;
+    return res;
   };
 
   return { getDashboardPosts, createAPost };

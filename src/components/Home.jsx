@@ -95,7 +95,7 @@ const Home = () => {
         )}
         {windowSize.width < 1020 && (
           <PocketNavigation>
-            <ItemName to="#">Name</ItemName>
+            <ItemName to="#">{user?.user_name}</ItemName>
             <Items
               isopen={isOpen ? "true" : "false"}
               to="dashboard"
@@ -112,6 +112,12 @@ const Home = () => {
               <div>{logo("forum")}</div>
               {isOpen && <p>FOROS</p>}
             </Items>
+            {user?.user_type !== "s" && (
+              <Items isopen={isOpen ? "true" : "false"} to="admin">
+                <div>{logo("admin")}</div>
+                {isOpen && <p>Administracion</p>}
+              </Items>
+            )}
             {/* <Items isopen={isOpen ? "true" : "false"} to="conference">
             <div>{logo("conference")}</div>
             {isOpen && <p>VID. CONF.</p>}

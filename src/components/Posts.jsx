@@ -17,6 +17,9 @@ const Posts = () => {
   const { createAPost } = usePosts(endpoint);
   const bodyRef = useRef();
   const titleRef = useRef();
+  const subjectRef = useRef();
+  const vidLinkRef = useRef();
+  const coverRef = useRef();
 
   useEffect(() => {
     ax.get(`${endpoint}/posts/all`).then(({ data }) => {
@@ -31,19 +34,30 @@ const Posts = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const data = await createAPost(
-      titleRef.current.value,
-      bodyRef.current.value,
-      2
-    );
-    console.log(data);
+    const title = titleRef.current?.value;
+    const body = bodyRef.current?.value;
+    const vidLink = vidLinkRef.current?.value;
+    const subjectName = subjectRef.current?.value;
+    const userName = user.user_name;
+    const cover = coverRef.current?.files[0];
+    const condition =
+      title &&
+      body &&
+      vidLink &&
+      subjectName &&
+      userName &&
+      cover !== undefined;
+    const value = { title, body, vidLink, subjectName, userName, cover };
+    if (!condition) {
+      return;
+    }
+    const data = await createAPost(value);
     if (data?.type === "error") {
       setErrorMsg(data?.result);
       return;
     }
     setErrorMsg("");
     setShowPostPanel(false);
-    console.log(data);
   };
 
   const selectedPostHandler = (item) => {
@@ -103,10 +117,16 @@ const Posts = () => {
                   placeholder="Ingresa un titulo"
                 />
                 <Styles.FormInput
-                  ref={titleRef}
+                  ref={subjectRef}
                   id="tags"
                   type="text"
                   placeholder="Introduce el tema o materia del foro"
+                />
+                <Styles.FormInput
+                  ref={vidLinkRef}
+                  id="vid"
+                  type="text"
+                  placeholder="Introduce el enlace del video"
                 />
                 <Styles.FormText
                   ref={bodyRef}
@@ -115,8 +135,8 @@ const Posts = () => {
                   placeholder="Ingresa el contenido"
                 />
                 <Styles.FormFile>
-                  <input type="file" accept="video/*,.mkv,.txt" />
-                  Ingresa un archivo de video
+                  <input type="file" accept="image/*" ref={coverRef} />
+                  Ingresa un archivo de imagen
                 </Styles.FormFile>
                 <Styles.Button>Submit</Styles.Button>
               </Styles.FormPost>

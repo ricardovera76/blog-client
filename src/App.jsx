@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import Dashboard from "./components/Dashboard";
 import Conference from "./components/Conference";
 import Auth from "./components/Auth";
+import Admin from "./components/Admin";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="posts" exact element={<Posts />} />
         <Route path="dashboard" exact element={<Dashboard />} />
         <Route path="conference" exact element={<Conference />} />
+        <Route path="admin" exact element={<Admin />} />
       </Route>
       <Route path="/auth" exact element={<Auth />} />
       <Route
