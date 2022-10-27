@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import Select from "react-select";
 
 export const Container = styled.div`
   padding: 15px;
@@ -45,24 +46,6 @@ export const ChatMain = styled.div`
 `;
 
 export const ChatMessage = styled.div`
-  /* max-width: 60%;
-  margin-bottom: 15px;
-  padding: 10px 20px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  margin: 15px;
-  min-width: 30%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  word-wrap: break-word;
-  align-self: ${(props) => (props.type === "me" ? "flex-end" : "flex-start")};
-  justify-content: ${(props) =>
-    props.type === "me" ? "flex-end" : "flex-start"};
-  background-color: ${(props) => (props.type === "me" ? "#fff" : "#6246ea")};
-  border-radius: 15px;
-  color: ${(props) => (props.type === "me" ? "#000" : "#fff")}; */
-
   align-self: ${(props) => (props.type === "me" ? "flex-end" : "flex-start")};
   background-color: #fff;
   color: #000;
@@ -156,55 +139,16 @@ export const Panel = styled.section`
   width: calc(${({ w }) => (w > 600 ? "20%" : "90%")} - 2 * 2%);
   margin: 2%;
   display: flex;
+  align-items: center;
   flex-direction: ${({ w }) => (w > 600 ? "column" : "row")};
   justify-content: ${({ w }) => (w > 600 ? "flex-start" : "space-evenly")};
 `;
 
-export const Dropdown = styled(motion.div)`
-  position: relative;
-  display: inline-block;
-  height: ${({ w }) => (w > 600 ? "auto" : "100%")};
-  width: ${({ w }) => (w > 600 ? "100%" : "45%")};
-`;
-
-export const DropdownButton = styled.button`
-  background-color: #fff;
-  font-size: ${({ w }) => (w > 600 ? "1rem" : "12px")};
-  height: 100%;
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+export const Dropdown = styled(Select)`
   width: 100%;
-  border-radius: 5px;
-  border: none;
-  transition: all 0.2s ease-in-out;
 
-  &:hover {
-    background-color: #6246ea;
-    color: #fff;
-  }
-`;
-
-export const DropdownMenu = styled(motion.div)`
-  display: ${({ isopen }) => (isopen === "true" ? "block" : "none")};
-  position: absolute;
-  border-radius: 5px;
-  z-index: 1000;
-  width: 100%;
-  background-color: #fff;
-  box-shadow: var(--shadow);
-`;
-
-export const DropdownMenuItems = styled(motion.div)`
-  padding: 15px;
-  border-radius: 5px;
-  font-size: ${({ w }) => (w > 900 ? "16px" : "12px")};
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    background-color: #6246ea;
-    color: #fff;
+  @media (max-width: 560px) {
+    width: 200%;
   }
 `;
 
@@ -222,6 +166,26 @@ export const FilesButton = styled.button`
   font-size: ${({ w }) => (w > 600 ? "1rem" : "12px")};
   height: ${({ w }) => (w > 600 ? "auto" : "100%")};
   width: 45%;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  border: none;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #6246ea;
+    color: #fff;
+  }
+`;
+
+export const Button = styled.button`
+  background-color: #fff;
+  margin: ${({ w }) => (w > 600 ? "5px" : "0 5px")};
+  font-size: ${({ w }) => (w > 600 ? "1rem" : "12px")};
+  height: ${({ w }) => (w > 600 ? "auto" : "12px")};
+  width: auto;
   padding: 15px;
   display: flex;
   justify-content: center;

@@ -1,4 +1,5 @@
 import React from "react";
+import ax from "axios";
 import io from "socket.io-client";
 import { logo } from "../assets/icons";
 import { AnimatePresence } from "framer-motion";
@@ -9,36 +10,66 @@ const socket = io.connect("http://localhost:5000");
 
 const Chats = () => {
   const [room, setRoom] = React.useState();
-  // const [room, setRoom] = React.useState("FISICA2021aaaa");
   const [chatMessages, setChatMessages] = React.useState([]);
-  const [dropdown, showDropdown] = React.useState(false);
   const [showModal, setShowModal] = React.useState(false);
   const windowSize = useWindowSize();
   const bottomRef = React.useRef(null);
   const inputMsg = React.useRef(null);
-  // const chats = ["FISICA2021aaaa", "FISICA2021bbbb"];
-  const chats = [];
+  const [chats, setChats] = React.useState([]);
 
+  const userName = JSON.parse(localStorage.getItem("userSigned")).user_name;
   const userID = JSON.parse(localStorage.getItem("userSigned")).user_id;
 
   const joinRoomHandler = () => {
-    console.log("joined", room, userID);
-    if (userID !== "" && room !== "") {
+    console.log("joined", room.label, userName);
+    if (userName !== "" && room.label !== "") {
       setChatMessages([]);
       socket.emit("join", room);
     }
+    ax.get(`http://localhost:5000/chats/${room.label}`).then(({ data }) => {
+      if (!data.error) {
+        const arr = data.data.chat_messages;
+        const res = [];
+        arr.map((msg) => {
+          const obj = JSON.parse(msg);
+          return res.push(obj);
+        });
+        setChatMessages(res);
+        console.log(res);
+        return;
+      }
+      console.log(data.message);
+    });
   };
 
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
+  React.useEffect(() => {
+    ax.post("http://localhost:5000/user/chats", { userName }).then(
+      ({ data }) => {
+        if (!data.error) {
+          const arr = data.data.user_subjects;
+          const res = [];
+          arr.map((subject) => {
+            const obj = JSON.parse(subject);
+            return res.push({ label: obj.subject_name, value: obj.subject_id });
+          });
+          setChats(res);
+          return;
+        }
+        console.log(data.message);
+      }
+    );
+  }, []);
+
   const sendMessageHandler = async () => {
     const msg = inputMsg.current.value;
     if (msg !== "") {
       const messageData = {
-        chat_name: room,
-        user_id: userID,
+        chat_name: room.label,
+        user_name: userName,
         message: msg,
         time:
           new Date(Date.now()).getHours() +
@@ -62,49 +93,15 @@ const Chats = () => {
     }
   }, [room, userID]);
 
-  const toggleDropdownMenu = () => {
-    showDropdown(!dropdown);
-  };
-
   return (
     <Styles.Container w={windowSize.width}>
       <Styles.Panel w={windowSize.width}>
-        <Styles.Dropdown w={windowSize.width} onClick={toggleDropdownMenu}>
-          <Styles.DropdownButton w={windowSize.width}>
-            Selecciona Un Chat
-          </Styles.DropdownButton>
-          <AnimatePresence>
-            <Styles.DropdownMenu
-              w={windowSize.width}
-              initial={`${dropdown}`}
-              animate={`${dropdown}`}
-              variants={{
-                true: {
-                  y: 0,
-                },
-                false: {
-                  y: -25,
-                },
-              }}
-              isopen={dropdown ? "true" : "false"}
-            >
-              {dropdown &&
-                chats.map((chat) => (
-                  <Styles.DropdownMenuItems
-                    w={windowSize.width}
-                    key={chat}
-                    onClick={() => {
-                      setRoom(chat);
-                      joinRoomHandler();
-                      toggleDropdownMenu();
-                    }}
-                  >
-                    {chat}
-                  </Styles.DropdownMenuItems>
-                ))}
-            </Styles.DropdownMenu>
-          </AnimatePresence>
-        </Styles.Dropdown>
+        <Styles.Dropdown
+          w={windowSize.width}
+          options={chats}
+          onChange={(val) => setRoom(val)}
+        />
+        <Styles.Button onClick={joinRoomHandler}>Join Room</Styles.Button>
         {windowSize.width <= 600 && (
           <Styles.FilesButton onClick={() => setShowModal(!showModal)}>
             Mostar Archivos
@@ -133,15 +130,20 @@ const Chats = () => {
         {/* <Files>Enviar archivos dedicados</Files> */}
       </Styles.Panel>
       <Styles.Chat w={windowSize.width}>
-        <Styles.ChatHead>{room}</Styles.ChatHead>
+        <Styles.ChatHead>{room?.label}</Styles.ChatHead>
         <Styles.ChatMain>
           {chatMessages.map((messages) => {
             return (
               <Styles.ChatMessage
-                key={messages.user_id + messages.time}
-                type={messages.user_id === userID ? "me" : "other"}
+                key={
+                  messages.user_id +
+                  messages.chat_id +
+                  messages.message +
+                  Math.random() * 5
+                }
+                type={messages.user_name === userName ? "me" : "other"}
                 data-time={`${
-                  messages.user_id === userID ? "" : messages.user_id
+                  messages.user_name === userName ? "" : messages.user_name
                 } ${messages.time}`}
               >
                 <h4>{messages.message}</h4>
