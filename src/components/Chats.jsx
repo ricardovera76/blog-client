@@ -62,7 +62,7 @@ const Chats = () => {
         console.log(data.message);
       }
     );
-  }, []);
+  }, [userName]);
 
   const sendMessageHandler = async () => {
     const msg = inputMsg.current.value;
