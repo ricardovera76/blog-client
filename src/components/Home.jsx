@@ -79,10 +79,10 @@ const Home = () => {
                 {isOpen && <p>Administracion</p>}
               </Items>
             )}
-            {/* <Items isopen={isOpen ? "true" : "false"} to="conference">
+            <Items isopen={isOpen ? "true" : "false"} to="conference">
             <div>{logo("conference")}</div>
             {isOpen && <p>VID. CONF.</p>}
-          </Items> */}
+          </Items>
             <Items
               isopen={isOpen ? "true" : "false"}
               to="/auth"
@@ -118,10 +118,10 @@ const Home = () => {
                 {isOpen && <p>Administracion</p>}
               </Items>
             )}
-            {/* <Items isopen={isOpen ? "true" : "false"} to="conference">
+            <Items isopen={isOpen ? "true" : "false"} to="conference">
             <div>{logo("conference")}</div>
             {isOpen && <p>VID. CONF.</p>}
-          </Items> */}
+          </Items>
             <Items
               isopen={isOpen ? "true" : "false"}
               to="/signin"

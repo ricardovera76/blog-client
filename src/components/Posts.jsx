@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import * as Styles from "../styles/Posts.js";
 import { logo } from "../assets/icons.js";
 import { useAuth } from "../hooks/useAuth.js";
+import { useWindowSize } from "../hooks/useWindowSize.js";
 const endpoint = "http://localhost:5000";
 
 const Posts = () => {
@@ -14,7 +15,12 @@ const Posts = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [selectedPost, setSelectedPost] = useState({});
   const [showFullPost, setShowFullPost] = useState(false);
+  const [filterList, setFilterList] = useState([
+    { value: 0, label: "Todas las materias" },
+  ]);
+  const [filter, setFilter] = useState(0);
   const { createAPost } = usePosts(endpoint);
+  const windowSize = useWindowSize();
   const bodyRef = useRef();
   const titleRef = useRef();
   const subjectRef = useRef();
@@ -26,6 +32,23 @@ const Posts = () => {
       setShownPosts(data.data);
     });
   }, [shownPosts]);
+
+  useEffect(() => {
+    ax.post(`${endpoint}/user/`, { userName: user.user_name }).then(
+      ({ data }) => {
+        const subjectArr =
+          data.data?.user_subjects && JSON.parse(data.data.user_subjects);
+        const test = filterList;
+        subjectArr?.map((subj) =>
+          test.push({
+            value: JSON.parse(subj).subject_id,
+            label: JSON.parse(subj).subject_name,
+          })
+        );
+        setFilterList(test);
+      }
+    );
+  }, [user, filterList]);
 
   const newPostHandler = () => {
     setShowPostPanel(!showPostPanel);
@@ -79,18 +102,35 @@ const Posts = () => {
               {logo("add")}
             </Styles.Controls>
           )}
-          <Styles.Controls>Dropdpwn Menu</Styles.Controls>
+          <Styles.Dropdown
+            w={windowSize.width}
+            options={filterList}
+            onChange={(val) => setFilter(parseInt(val.value))}
+          />
         </Styles.Panel>
       </Styles.ControlPanel>
       <Styles.PostsContainer>
-        {shownPosts?.map((item) => (
-          <Styles.PostCard
-            key={item.post_id}
-            onClick={() => selectedPostHandler(item)}
-          >
-            <h3>{item?.post_title.toUpperCase()}</h3>
-          </Styles.PostCard>
-        ))}
+        {shownPosts?.map((item) =>
+          filter === 0 ? (
+            <Styles.PostCard
+              key={item.post_id}
+              onClick={() => selectedPostHandler(item)}
+            >
+              <h3 onClick={() => console.log(item)}>
+                {item?.post_title.toUpperCase()}
+              </h3>
+            </Styles.PostCard>
+          ) : filter === item.post_subject_id ? (
+            <Styles.PostCard
+              key={item.post_id}
+              onClick={() => selectedPostHandler(item)}
+            >
+              <h3 onClick={() => console.log(item)}>
+                {item?.post_title.toUpperCase()}
+              </h3>
+            </Styles.PostCard>
+          ) : null
+        )}
       </Styles.PostsContainer>
       <AnimatePresence>
         {showPostPanel && (
@@ -160,10 +200,13 @@ const Posts = () => {
               </Styles.ModalHeader>
               <Styles.ModalBody>
                 <Styles.ModalBodyText>
-                  {selectedPost.post_body}
+                  {selectedPost.post_cover}
                 </Styles.ModalBodyText>
                 <Styles.ModalBodyAtt>
                   {selectedPost.post_body}
+                </Styles.ModalBodyAtt>
+                <Styles.ModalBodyAtt>
+                  {selectedPost.post_vid}
                 </Styles.ModalBodyAtt>
               </Styles.ModalBody>
             </Styles.ModalFull>

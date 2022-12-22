@@ -6,7 +6,7 @@ import { useUserInfo } from "./useUserInfo";
 export const useAuth = () => {
   const [user, setUser] = useState([]);
   const [data, setData] = useState([]);
-  const [chats, setChats] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const navigate = useNavigate();
   const { getUserInfo } = useUserInfo("http://localhost:5000");
   const { setItem, getItem, removeItem } = useLocalStorage("userSigned");
@@ -21,7 +21,10 @@ export const useAuth = () => {
       setData(response);
       if (!response.error) {
         setItem(response.data);
-        setChats(response.data?.user_subjects || []);
+        const chatArr = JSON.parse(response.data?.user_subjects);
+        const result = [];
+        chatArr.map((chat) => result.push(JSON.parse(chat)));
+        setSubjects(result);
         setUser(response.data || []);
         return;
       }
@@ -31,5 +34,5 @@ export const useAuth = () => {
     getData();
   }, []);
 
-  return [user, chats, data];
+  return [user, subjects, data];
 };

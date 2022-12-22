@@ -52,7 +52,7 @@ const Chats = () => {
         if (!data.error) {
           const arr = data.data.user_subjects;
           const res = [];
-          arr.map((subject) => {
+          arr?.map((subject) => {
             const obj = JSON.parse(subject);
             return res.push({ label: obj.subject_name, value: obj.subject_id });
           });

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import Select from "react-select";
 
 export const Container = styled.div`
   /* background-color: red; */
@@ -19,17 +20,17 @@ export const Container = styled.div`
 
 export const ControlPanel = styled.section`
   background-color: #eee;
-  height: 7vh;
+  height: 7.5vh;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  width: min(calc(50% - 2 * 15px), 500px);
+  width: min(calc(60% - 2 * 15px), 600px);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 
   @media (max-width: 500px) {
-    width: min(calc(80% - 2 * 15px), 500px);
+    width: 100%;
   }
 `;
 
@@ -268,10 +269,36 @@ export const Button = styled.button`
     cursor: pointer;
   }
 `;
+export const Submit = styled.button`
+  margin: 15px 0;
+  width: 50%;
+  padding: 10px 0;
+  background-color: #eee;
+  border-radius: 10px;
+  border: none;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  /* border: 2px solid #6246ea; */
+  font-weight: 600;
+  transition: all 0.5s;
+
+  &:hover {
+    background-color: #6246ea;
+    color: #ffffff;
+    cursor: pointer;
+  }
+`;
 
 export const ModalControls = styled.section`
   display: flex;
   justify-content: space-between;
   height: max-content;
   width: 100%;
+`;
+export const Dropdown = styled(Select)`
+  width: 100%;
+
+  @media (max-width: 560px) {
+    width: 200%;
+  }
 `;

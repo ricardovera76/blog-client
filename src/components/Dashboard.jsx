@@ -14,7 +14,7 @@ import { useAuth } from "../hooks/useAuth";
 
 const Dashboard = () => {
   const [posts, setPosts] = useState([]);
-  const [, chats] = useAuth(); // set this to dynamic
+  const [, subjects] = useAuth(); // set this to dynamic
   const { getDashboardPosts } = usePosts("http://localhost:5000");
   useEffect(() => {
     const getter = async () => {
@@ -22,8 +22,7 @@ const Dashboard = () => {
       setPosts(response.data || []);
     };
     getter();
-  }, []);
-
+  }, [getDashboardPosts]);
   return (
     <Container>
       <Main>
@@ -44,9 +43,10 @@ const Dashboard = () => {
         <ChatsContainer>
           <h2>Mis Ultimos Chats</h2>
           <ChatsGrid>
-            {chats.map((chat, index) => (
+            {subjects.length !== 0 && subjects?.map((subject, index) => (
+
               <Chats key={index}>
-                <h4>{chat.chat_name}</h4>
+                <h4>{subject.subject_name}</h4>
               </Chats>
             ))}
           </ChatsGrid>
