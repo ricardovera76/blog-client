@@ -28,7 +28,7 @@ const Chats = () => {
     }
     ax.get(`http://localhost:5000/chats/${room.label}`).then(({ data }) => {
       if (!data.error) {
-        const arr = data.data.chat_messages;
+        const arr = JSON.parse(data.data.chat_messages);
         const res = [];
         arr.map((msg) => {
           const obj = JSON.parse(msg);
@@ -50,10 +50,11 @@ const Chats = () => {
     ax.post("http://localhost:5000/user/chats", { userName }).then(
       ({ data }) => {
         if (!data.error) {
-          const arr = data.data.user_subjects;
+          const arr = JSON.parse(data.data.user_subjects);
           const res = [];
           arr?.map((subject) => {
             const obj = JSON.parse(subject);
+
             return res.push({ label: obj.subject_name, value: obj.subject_id });
           });
           setChats(res);
@@ -63,6 +64,29 @@ const Chats = () => {
       }
     );
   }, [userName]);
+
+  React.useEffect(() => {
+    const chatInterval = setInterval(() => {
+      if (room !== undefined) {
+        ax.get(`http://localhost:5000/chats/${room.label}`).then(({ data }) => {
+          if (!data.error) {
+            const arr = JSON.parse(data.data.chat_messages);
+            const res = [];
+            arr.map((msg) => {
+              const obj = JSON.parse(msg);
+              return res.push(obj);
+            });
+            setChatMessages(res);
+            return;
+          }
+          console.log(data.message);
+        })
+      }
+    }, 1000)
+    return () => {
+      clearInterval(chatInterval)
+    }
+  })
 
   const sendMessageHandler = async () => {
     const msg = inputMsg.current.value;
@@ -85,6 +109,7 @@ const Chats = () => {
 
   React.useEffect(() => {
     socket.on("received", (data) => {
+      console.log(data)
       setChatMessages((list) => [...list, data]);
     });
     if (userID !== "" && room !== "") {
@@ -142,9 +167,8 @@ const Chats = () => {
                   Math.random() * 5
                 }
                 type={messages.user_name === userName ? "me" : "other"}
-                data-time={`${
-                  messages.user_name === userName ? "" : messages.user_name
-                } ${messages.time}`}
+                data-time={`${messages.user_name === userName ? "" : messages.user_name
+                  } ${messages.time}`}
               >
                 <h4>{messages.message}</h4>
               </Styles.ChatMessage>
